@@ -9,6 +9,9 @@
   "background": {
     "service_worker": "background.js"
   },
+  "action": {
+    "default_title": "Click to open panel"
+  },
   "permissions": ["sidePanel", "tabs", "scripting", "cookies", "storage"],
   "host_permissions": ["https://*/*", "http://*/*", "http://*/*/*"],
   "content_security_policy": {

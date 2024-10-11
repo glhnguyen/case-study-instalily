@@ -1,43 +1,50 @@
-// Event listener to handle cookie access after the extension is installed
-chrome.runtime.onInstalled.addListener(() => {
-  console.log("Extension installed.");
+const SITE_ORIGIN = "https://www.partselect.com";
 
-  // Access the cookie from the backend
-  chrome.cookies.get(
-    {
-      url: "http://localhost:8000", // The domain where the cookie is set
-      name: "session_id", // Name of the cookie you want to access
-    },
-    function (cookie) {
-      if (cookie) {
-        // If the cookie exists, log it and perform any necessary action
-        console.log("Cookie retrieved:", cookie.value);
+// Allows users to open the side panel by clicking on the action toolbar icon
+chrome.sidePanel
+  .setPanelBehavior({ openPanelOnActionClick: true })
+  .catch((error) => console.error(error));
 
-        // Example: Store the session ID in chrome.storage for later use
-        chrome.storage.local.set({ session_id: cookie.value }, function () {
-          console.log("Session ID stored in chrome.storage:", cookie.value);
-        });
-      } else {
-        // If no cookie is found
-        console.log("No session cookie found.");
-      }
-    }
-  );
+chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
+  if (!tab.url) return;
+  const url = new URL(tab.url);
+  if (url.origin === SITE_ORIGIN) {
+    await chrome.sidePanel.setOptions({
+      tabId,
+      path: "index.html",
+      enabled: true,
+    });
+  } else {
+    // Disables the side panel on all other sites
+    await chrome.sidePanel.setOptions({
+      tabId,
+      enabled: false,
+    });
+  }
 });
 
-// Example of accessing the cookie when the background.js file runs
-chrome.runtime.onStartup.addListener(() => {
-  chrome.cookies.get(
-    {
-      url: "http://localhost:8000",
-      name: "session_id",
-    },
-    function (cookie) {
-      if (cookie) {
-        console.log("Cookie found on startup:", cookie.value);
-      } else {
-        console.log("No cookie found on startup.");
-      }
+function generateUUID() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
+chrome.cookies.set(
+  {
+    url: "http://localhost:8000",
+    name: "session_id",
+    value: generateUUID(),
+    expirationDate: Math.floor(Date.now() / 1000) + 600,
+    sameSite: "lax",
+    secure: false,
+  },
+  function (cookie) {
+    if (cookie) {
+      console.log("Cookie retrieved: ", cookie.value);
+    } else {
+      console.log("No session cookie found.");
     }
-  );
-});
+  }
+);

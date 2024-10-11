@@ -38,21 +38,16 @@ async def read_root():
 @app.post("/ask")
 async def ask_question(query: Query, request: Request, response: Response):
 
+    # Get session_id from cookie and save session in db
     session_id = request.cookies.get("session_id")
-    print(session_id)
-    if not session_id:
-        session_id = redis_db.create_session()
-        expiry = datetime.now(timezone.utc) + timedelta(minutes=10)
-        response.set_cookie(key="session_id", value=session_id, expires=expiry)
-    
-    history = redis_db.get_session(f"session_{session_id}")
+    if not redis_db.check_session(session_id):
+        redis_db.create_session(session_id)
+
+    history = redis_db.get_session(session_id)
     question = query.question
     chat = chatbot.chat(question, history)
 
-    previous_chat = f"""
-        User: {question}
-        System: {chat}
-        """
+    previous_chat = [{"role": "user", "content": question}, {"role": "assistant", "content": chat}]
     
     redis_db.update_history(session_id, previous_chat)
 
