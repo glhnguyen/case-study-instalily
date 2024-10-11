@@ -6,8 +6,11 @@
   "side_panel": {
     "default_path": "index.html"
   },
-  "permissions": ["sidePanel", "tabs", "activeTabs", "scripting"],
-  "host_permissions": ["https://*/*", "http://*/*","http://*/*/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["sidePanel", "tabs", "scripting", "cookies", "storage"],
+  "host_permissions": ["https://*/*", "http://*/*", "http://*/*/*"],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self';"
   }

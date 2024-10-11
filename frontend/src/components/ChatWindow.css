@@ -9,8 +9,8 @@
   flex-direction: column;
   padding-bottom: 2px;
   font-size: 16px;
-  margin-top: 60px; 
-  margin-bottom: 70px; 
+  margin-top: 60px;
+  margin-bottom: 70px;
 }
 
 .user-message-container,
@@ -24,10 +24,12 @@
 .user-message-container {
   align-self: flex-end;
   align-items: flex-end;
+  width: 85%;
 }
 
 .assistant-message-container {
   align-items: flex-start;
+  width: 85%;
 }
 
 .message {
@@ -45,17 +47,17 @@
 .user-message {
   align-self: flex-end;
   font-size: 13px;
-  background-color: #1b3875;
-  color: #ffffff;
+  background-color: #f4c72b;
+  color: #000;
   border-top-right-radius: 0;
   text-align: left;
 }
 
 .assistant-message {
   align-self: flex-start;
-  background-color: #f6f6f6;
+  background-color: #28806f;
   border-top-left-radius: 0;
-  color: #000000;
+  color: #f6f6f6;
   padding: 14px;
   font-size: 13px;
   width: 100%;
@@ -104,7 +106,7 @@
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
-  background-color: #121212;
+  background-color: #28806f;
   color: white;
   cursor: pointer;
   font-size: 13px;

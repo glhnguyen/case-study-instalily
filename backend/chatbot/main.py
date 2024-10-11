@@ -8,6 +8,7 @@ import os
 from utils.session import Session
 from utils.chatbot import Chatbot
 
+
 load_dotenv()
 openai_key = os.getenv("OPENAI_API_KEY")
 
@@ -38,7 +39,7 @@ async def read_root():
 async def ask_question(query: Query, request: Request, response: Response):
 
     session_id = request.cookies.get("session_id")
-    
+    print(session_id)
     if not session_id:
         session_id = redis_db.create_session()
         expiry = datetime.now(timezone.utc) + timedelta(minutes=10)
